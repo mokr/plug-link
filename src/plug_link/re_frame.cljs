@@ -19,7 +19,7 @@
 ;| EVENTS - OUTGOING MESSAGE TO SERVER
 
 (rf/reg-event-fx
-  :link/msg
+  :link/send
   [rf/trim-v]
   (fn [{:keys [db]} [message]]
     (client/send! message)
@@ -32,6 +32,6 @@
 
 
 (rf/reg-fx
-  :link/msg
+  :link-send
   (fn [event-vector]
     (client/send! event-vector)))

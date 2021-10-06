@@ -31,8 +31,8 @@ Backend:
 (ns your.handler
   (:require [plug-link.core :as link]))
 
-;; Assuming Luminus based project,
-;; add these reitit routes after `(home/routes)`  
+;; Assuming Luminus based project (using reitit for routing),
+;; add this to routes after `(home/routes)`  
 (link/routes)
 
 ```
@@ -77,7 +77,7 @@ Frontend:
 (rf/reg-event-fx
   :some/action
   (fn [_ _]
-    {:link/msg {:hello "server"}}))
+    {:link/msg [:some/event {:hello "server"}]}))
 ```
 
 # LICENCE

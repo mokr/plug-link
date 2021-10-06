@@ -7,6 +7,7 @@
 
 (log/debug "Init re-frame integration")
 
+
 ;|-------------------------------------------------
 ;| DISPATCH INCOMING
 
@@ -21,15 +22,12 @@
 (rf/reg-event-fx
   :link/send
   [rf/trim-v]
-  (fn [{:keys [db]} [message]]
-    (client/send! message)
-    ;;TODO: Parse data and update db, dispatch, ...
-    {}))
+  (fn [_ [message]]
+    {:link-send message}))
 
 
 ;|-------------------------------------------------
 ;| FX - OUTGOING MESSAGE (to server)
-
 
 (rf/reg-fx
   :link-send

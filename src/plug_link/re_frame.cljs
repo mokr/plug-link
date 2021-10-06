@@ -22,8 +22,8 @@
 (rf/reg-event-fx
   :link/send
   [rf/trim-v]
-  (fn [_ [message]]
-    {:link-send message}))
+  (fn [_ [event-vector]]
+    {:link-send event-vector}))
 
 
 ;|-------------------------------------------------

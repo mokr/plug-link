@@ -70,10 +70,12 @@
 ;|-------------------------------------------------
 ;| DISPATCH
 
-(def dispatch-incoming-sente-internal-msg
-  "Multimethod dispatching 'top-level' Sente events.
-  Clients typically don't need to add any dispatchers here."
-  dispatch/incoming-sente-internal-msg)
+#?(:cljs
+   (def dispatch-incoming-sente-msg
+     "Multimethod dispatching 'top-level' Sente events.
+     Clients typically don't need to add any dispatchers here
+     as (wrapped) user messages are dispatched by 'dispatch-incoming-msg'."
+     dispatch/incoming-sente-msg))
 
 
 (def dispatch-incoming-msg
@@ -83,4 +85,9 @@
   Frontend:
   - If re-frame is not required as described in doc string of init fn,
     you need to either handle :default case or all messages explicitly."
-  dispatch/incoming-msg)
+  #?(:clj
+     ;; Backend: Incoming messages are not wrapped in :chsk/recv
+     dispatch/incoming-sente-msg
+     :cljs
+     ;; Frontend: Incoming messages are wrapped in :chsk/recv for easy relay to e.g. re-frame
+     dispatch/incoming-wrapped-msg))

@@ -24,42 +24,43 @@
 
 
 ;|-------------------------------------------------
-;| USER/LINK MESSAGES
-
-(defmulti incoming-msg
-          "Dispatch of link messages.
-          Allows us to perform something other than the default.
-          E.g. hook message in frontend before it is dispatch via re-frame"
-          event-dispatcher)
-
+;| FRONTEND WRAPPED USER/LINK MESSAGES
+#?(:cljs
+   (defmulti incoming-wrapped-msg
+             "Dispatch of link messages.
+             Allows us to perform something other than the default.
+             E.g. hook message in frontend before it is dispatch via re-frame"
+             event-dispatcher))
 
 ;; NOOP. Expected events wrapped in :chsk/recv to be user messages only, not Sente internal :chsk/ws-ping.
 ;; See https://github.com/ptaoussanis/sente/issues/391
-(defmethod incoming-msg :chsk/ws-ping [_])
+#?(:cljs
+   (defmethod incoming-wrapped-msg :chsk/ws-ping [_]))
 
 
-(defmethod incoming-msg :default [event]
-  ;;NOTE: If you :require [plug-link.re-frame], it will hook up this :default to go to re-frame dispatch
-  #?(:clj (log/error "Unhandled event" event)))
+;;Frontend note: If you :require [plug-link.re-frame], it will hook up this :default to go to re-frame dispatch
+;(defmethod incoming-wrapped-msg :default [event]
+;  (log/error "Unhandled event" event))
 
 
 ;|-------------------------------------------------
 ;| SENTE INTERNAL MESSAGES
 
-(defmulti incoming-sente-internal-msg
+(defmulti incoming-sente-msg
           "Dispatch of the 'top-level' messages on sente websocket link.
           User messages are wrapped in :chsk/recv that are unwrapped and
           sent to separate link message dispatcher."
           event-dispatcher)
 
-
-(defmethod incoming-sente-internal-msg :chsk/recv [event]   ;; Should only see these on client side
-  (let [[_ wrapped-event] event]
-    (incoming-msg wrapped-event)))
+;; Frontend only: Relay wrapped messages to separate dispatch
+#?(:cljs
+   (defmethod incoming-sente-msg :chsk/recv [event]         ;; Should only see these on client side
+     (let [[_ wrapped-event] event]
+       (incoming-wrapped-msg wrapped-event))))
 
 
 ;;NOOP
-(defmethod incoming-sente-internal-msg :default [_])
+(defmethod incoming-sente-msg :default [_])
 
 
 ;|-------------------------------------------------
@@ -70,7 +71,7 @@
   Enables e.g. logging before dispatch of event."
   [{:keys [event] :as msg}]
   (log/debug "Got message ID" (:id msg))                    ;;TODO: Will probably disable this when everything works as it might spam too much
-  (incoming-sente-internal-msg event))
+  (incoming-sente-msg event))
 
 
 ;|-------------------------------------------------

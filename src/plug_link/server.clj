@@ -60,7 +60,7 @@
 ;|-------------------------------------------------
 ;| SEND TO CLIENT(S)
 
-(defn broadcast!
+(defn broadcast
   "Send event to all connected clients.
   Message is a vector like used for events in re-frame [:action data]"
   [event-vector]
@@ -70,13 +70,13 @@
     (chsk-send! uid event-vector)))
 
 
-(defn send!
+(defn send
   "Send message.
    Arity 1: Broadcast
    Arity 2: Send to single user (with client-uid)"
   ([event-vector]
    {:pre [(vector? event-vector)]}
-   (broadcast! event-vector))
+   (broadcast event-vector))
   ([client-uid event-vector]
    {:pre [(vector? event-vector)]}
    (if ((:any @connected-uids) client-uid)

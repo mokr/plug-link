@@ -59,11 +59,11 @@
 
 (def send!
   "Send message over link"
-  #?(:clj  server/send!
-     :cljs client/send!))
+  #?(:clj  server/send
+     :cljs client/send))
 
 #?(:clj
-   (def broadcast! server/broadcast!))
+   (def broadcast! server/broadcast))
 
 
 ;|-------------------------------------------------

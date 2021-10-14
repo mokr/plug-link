@@ -32,4 +32,4 @@
 (rf/reg-fx
   :link-send
   (fn [event-vector]
-    (client/send! event-vector)))
+    (client/send event-vector)))

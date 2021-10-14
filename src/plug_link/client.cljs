@@ -67,7 +67,7 @@
 ;| SENDING
 
 ;;FIXME: Send to specific user, currently it will just broadcast.
-(defn send!
+(defn send
   "Send an event (vector) to backend over websocket link"
   [event]
   {:pre [(vector? event)]}

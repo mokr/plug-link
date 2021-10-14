@@ -35,10 +35,10 @@
 
 ;; NOOP. Expected events wrapped in :chsk/recv to be user messages only, not Sente internal :chsk/ws-ping.
 ;; See https://github.com/ptaoussanis/sente/issues/391
-(defmethod incoming-link-msg :chsk/ws-ping [_])
+(defmethod incoming-msg :chsk/ws-ping [_])
 
 
-(defmethod incoming-link-msg :default [event]
+(defmethod incoming-msg :default [event]
   ;;NOTE: If you :require [plug-link.re-frame], it will hook up this :default to go to re-frame dispatch
   #?(:clj (log/error "Unhandled event" event)))
 
@@ -46,27 +46,31 @@
 ;|-------------------------------------------------
 ;| SENTE INTERNAL MESSAGES
 
-(defmulti incoming-sente-internal-msg event-dispatcher)
+(defmulti incoming-sente-internal-msg
+          "Dispatch of the 'top-level' messages on sente websocket link.
+          User messages are wrapped in :chsk/recv that are unwrapped and
+          sent to separate link message dispatcher."
+          event-dispatcher)
 
 
-(defmethod incoming-sente-msg :chsk/recv [event]            ;; Should only see these on client side
+(defmethod incoming-sente-internal-msg :chsk/recv [event]   ;; Should only see these on client side
   (let [[_ wrapped-event] event]
-    (incoming-link-msg wrapped-event)))
+    (incoming-msg wrapped-event)))
 
 
 ;;NOOP
-(defmethod incoming-sente-msg :default [_])
+(defmethod incoming-sente-internal-msg :default [_])
 
 
 ;|-------------------------------------------------
 ;| FIRST RECEIVER
 
-(defn dispatch-incoming-message
+(defn handle-incoming-sente-message
   "First receiver of Sente channel message.
-  Enables e.g. logging before true dispatch starts."
+  Enables e.g. logging before dispatch of event."
   [{:keys [event] :as msg}]
   (log/debug "Got message ID" (:id msg))                    ;;TODO: Will probably disable this when everything works as it might spam too much
-  (incoming-sente-msg event))
+  (incoming-sente-internal-msg event))
 
 
 ;|-------------------------------------------------
@@ -75,5 +79,5 @@
 (defn start-dispatch-loop [ch-chsk]
   (log/info "Init receive loop")
   (go-loop []
-    (dispatch-incoming-message (<! ch-chsk))
+    (handle-incoming-sente-message (<! ch-chsk))
     (recur)))

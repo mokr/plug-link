@@ -1,4 +1,5 @@
 (ns plug-link.server
+  (:refer-clojure :exclude [send])
   (:require [plug-link.dispatch :as dispatch]
             [taoensso.sente :as sente]
             [taoensso.sente.packers.transit :as sente-transit]

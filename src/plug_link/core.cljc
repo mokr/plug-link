@@ -1,5 +1,6 @@
 (ns plug-link.core
   (:require [plug-link.dispatch :as dispatch])
+  #?(:clj (:refer-clojure :exclude [send]))
   #?(:clj  (:require
              [plug-link.server :as server]
              [plug-link.routes :as routes])
@@ -57,27 +58,29 @@
 ;|-------------------------------------------------
 ;| SEND
 
-(def send!
+(def send
   "Send message over link"
   #?(:clj  server/send
      :cljs client/send))
 
 #?(:clj
-   (def broadcast! server/broadcast))
+   (def broadcast server/broadcast))
 
 
 ;|-------------------------------------------------
 ;| DISPATCH
 
 (def dispatch-incoming-sente-internal-msg
-  "Add dispatch multimethod.
-  Should not need to add any dispatchers"
+  "Multimethod dispatching 'top-level' Sente events.
+  Clients typically don't need to add any dispatchers here."
   dispatch/incoming-sente-internal-msg)
 
 
 (def dispatch-incoming-msg
-  "Dispatch user plane link event message.
+  "Multimethod dispatching user/app link event message.
+   Arg is an event vector: [event-id ,,,]
 
   Frontend:
-   If re-frame is not required as described in doc string of init fn, you need either handle :default case or all messages explicitly."
+  - If re-frame is not required as described in doc string of init fn,
+    you need to either handle :default case or all messages explicitly."
   dispatch/incoming-msg)

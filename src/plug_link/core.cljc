@@ -69,15 +69,15 @@
 ;|-------------------------------------------------
 ;| DISPATCH
 
-(def dispatch-incoming-sente-msg
+(def dispatch-incoming-sente-internal-msg
   "Add dispatch multimethod.
   Should not need to add any dispatchers"
-  dispatch/incoming-sente-msg)
+  dispatch/incoming-sente-internal-msg)
 
 
-(def dispatch-incoming-link-msg
+(def dispatch-incoming-msg
   "Dispatch user plane link event message.
 
   Frontend:
    If re-frame is not required as described in doc string of init fn, you need either handle :default case or all messages explicitly."
-  dispatch/incoming-link-msg)
+  dispatch/incoming-msg)

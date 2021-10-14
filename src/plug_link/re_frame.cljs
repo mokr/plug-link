@@ -12,7 +12,7 @@
 ;| DISPATCH INCOMING
 
 ;; Let re-frame handle dispatch of all messages (that has not been overridden by a specific defmethod)
-(defmethod dipatch/incoming-link-msg :default [event]
+(defmethod dipatch/incoming-msg :default [event]
   (rf/dispatch event))
 
 

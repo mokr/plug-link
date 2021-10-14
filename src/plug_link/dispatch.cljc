@@ -26,7 +26,7 @@
 ;|-------------------------------------------------
 ;| USER/LINK MESSAGES
 
-(defmulti incoming-link-msg
+(defmulti incoming-msg
           "Dispatch of link messages.
           Allows us to perform something other than the default.
           E.g. hook message in frontend before it is dispatch via re-frame"
@@ -46,7 +46,7 @@
 ;|-------------------------------------------------
 ;| SENTE INTERNAL MESSAGES
 
-(defmulti incoming-sente-msg event-dispatcher)
+(defmulti incoming-sente-internal-msg event-dispatcher)
 
 
 (defmethod incoming-sente-msg :chsk/recv [event]            ;; Should only see these on client side

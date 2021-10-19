@@ -69,7 +69,7 @@
 (defn temp-debug-logging [{:keys [id event] :as msg}]
   (case id
     :chsk/ws-ping nil
-    :chsk/recv (log/debug "Got :chsk/recv wrapped event" (ffirst event))
+    :chsk/recv (log/debug "Got :chsk/recv wrapped event" (some-> event second first))
     (log/debug "Got message ID" id)))
 
 

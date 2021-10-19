@@ -66,11 +66,18 @@
 ;|-------------------------------------------------
 ;| FIRST RECEIVER
 
+(defn temp-debug-logging [{:keys [id event] :as msg}]
+  (case id
+    :chsk/ws-ping nil
+    :chsk/recv (log/debug "Got :chsk/recv wrapped event" (ffirst event))
+    (log/debug "Got message ID" id)))
+
+
 (defn handle-incoming-sente-message
   "First receiver of Sente channel message.
   Enables e.g. logging before dispatch of event."
   [{:keys [event] :as msg}]
-  (log/debug "Got message ID" (:id msg))                    ;;TODO: Will probably disable this when everything works as it might spam too much
+  (temp-debug-logging msg)                                  ;;DEBUG
   (incoming-sente-msg event))
 
 

@@ -77,7 +77,7 @@
   "First receiver of Sente channel message.
   Enables e.g. logging before dispatch of event."
   [{:keys [event] :as msg}]
-  (temp-debug-logging msg)                                  ;;DEBUG
+  ;(temp-debug-logging msg)                                  ;;DEBUG
   (incoming-sente-msg event))
 
 

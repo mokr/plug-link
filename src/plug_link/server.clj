@@ -63,10 +63,9 @@
 
 (defn broadcast
   "Send event to all connected clients.
-  Message is a vector like used for events in re-frame [:action data]"
+  Event is a vector like the ones in re-frame [:action data]"
   [event-vector]
-  (log/debug "Broadcast of event type" (first event-vector))
-  (log/debug "Broadcasting to" (count (:any @connected-uids)) "clients")
+  (log/debug (format "Broadcast of %s to %d clients" (first event-vector) (count (:any @connected-uids))))
   (doseq [uid (:any @connected-uids)]
     (chsk-send! uid event-vector)))
 

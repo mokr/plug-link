@@ -57,8 +57,8 @@ Backend:
   (:require [plug-link.core :as link]))
 
 
-(link/send!)
-(link/broadcast!)
+(link/send)
+(link/broadcast)
 ```
 
 Frontend:
@@ -68,7 +68,7 @@ Frontend:
   (:require [plug-link.core :as link]
     [re-frame.core :as rf])) ; Note: >evt is: (def >evt re-frame.core/dispatch)
 
-(link/send! [:some/event {:hello "server"}])
+(link/send [:some/event {:hello "server"}])
 
 ;; Re-frame via event
 (>evt [:link/msg [:some/event {:hello "server"}]])
